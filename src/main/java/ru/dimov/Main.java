@@ -17,24 +17,24 @@ public class Main {
 
     public static void main(String[] args) {
         if (args.length == 0) {
-            System.err.println("Ошибка: Не указан путь к входному файлу.");
-            System.err.println("Использование: java -jar line-grouper.jar <путь_к_файлу>");
+            System.err.println("Error: Input file path not specified.");
+            System.err.println("Usage: java -jar line-grouper.jar <file_path>");
             return;
         }
 
         try {
             Path inputPath = Paths.get(args[0]);
             if (!Files.exists(inputPath) || !Files.isReadable(inputPath)) {
-                System.err.println("Ошибка: Файл не существует или не может быть прочитан: " + inputPath);
+                System.err.println("Error: File does not exist or cannot be read: " + inputPath);
                 return;
             }
 
             processFile(inputPath);
 
         } catch (InvalidPathException e) {
-            System.err.println("Ошибка: Некорректный путь файла: " + args[0]);
+            System.err.println("Error: Invalid file path: " + args[0]);
         } catch (Exception e) {
-            System.err.println("Произошла непредвиденная ошибка: " + e.getMessage());
+            System.err.println("An unexpected error has occurred: " + e.getMessage());
             e.printStackTrace();
         }
     }
@@ -44,12 +44,12 @@ public class Main {
      */
     private static void processFile(Path inputPath) throws IOException {
         long startTime = System.currentTimeMillis();
-        System.out.println("Начало обработки файла: " + inputPath);
+        System.out.println("Starting file processing: " + inputPath);
 
         Map<List<String>, String> parsedToRawLineMap = readAndParseUniqueLines(inputPath);
 
         if (parsedToRawLineMap.isEmpty()) {
-            System.out.println("Входной файл не содержит корректных строк для обработки.");
+            System.out.println("The input file does not contain any valid lines for processing.");
             writeGroupsToFile(Collections.emptyList(), OUTPUT_PATH);
             return;
         }
@@ -63,8 +63,8 @@ public class Main {
         writeGroupsToFile(groups, OUTPUT_PATH);
 
         long endTime = System.currentTimeMillis();
-        System.out.println("Обработка завершена. Результат в файле " + OUTPUT_PATH);
-        System.out.printf("Затраченное время в секундах: %.2f \n", (endTime - startTime) / 1000.0);
+        System.out.println("Processing completed. The result is in the file " + OUTPUT_PATH);
+        System.out.printf("Time spent (in seconds): %.2f \n", (endTime - startTime) / 1000.0);
     }
 
     /**
@@ -84,7 +84,7 @@ public class Main {
                 String[] parts = line.split(";", -1);
 
                 List<String> parsed = Arrays.stream(parts)
-                        .map(Main::unquote) // Применяем новый метод unquote
+                        .map(Main::unquote)
                         .toList();
                 parsedToRawLineMap.putIfAbsent(parsed, line);
                 /*
