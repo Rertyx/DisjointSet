@@ -8,6 +8,7 @@ import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class Main {
@@ -79,13 +80,26 @@ public class Main {
                     return;
                 }
 
+
                 String[] parts = line.split(";", -1);
 
-                List<String> parsed = Arrays.asList(parts);
+                List<String> parsed = Arrays.stream(parts)
+                        .map(Main::unquote) // Применяем новый метод unquote
+                        .toList();
                 parsedToRawLineMap.putIfAbsent(parsed, line);
+                /*
+                List<String> parsed = Arrays.asList(parts);
+                 */
             });
         }
         return parsedToRawLineMap;
+    }
+
+    private static String unquote(String s) {
+        if (s != null && s.length() >= 2 && s.startsWith("\"") && s.endsWith("\"")) {
+            return s.substring(1, s.length() - 1);
+        }
+        return s;
     }
 
     private static boolean isLineStructurallyInvalid(String line) {

@@ -32,7 +32,7 @@ public class DisjointSetUnion {
             root = parent[root];
         }
 
-        // Сжатие пути: делаем все узлы на пути прямыми потомками корня.
+
         int current = p;
         while (current != root) {
             int next = parent[current];
@@ -54,7 +54,7 @@ public class DisjointSetUnion {
             return; // Уже в одном множестве
         }
 
-        // Объединение по размеру: меньшее дерево присоединяется к большему.
+
         if (size[rootP] < size[rootQ]) {
             parent[rootP] = rootQ;
             size[rootQ] += size[rootP];
