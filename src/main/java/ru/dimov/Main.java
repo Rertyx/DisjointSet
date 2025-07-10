@@ -87,9 +87,6 @@ public class Main {
                         .map(Main::unquote)
                         .toList();
                 parsedToRawLineMap.putIfAbsent(parsed, line);
-                /*
-                List<String> parsed = Arrays.asList(parts);
-                 */
             });
         }
         return parsedToRawLineMap;
@@ -130,13 +127,15 @@ public class Main {
         int n = uniqueLines.size();
         DisjointSetUnion dsu = new DisjointSetUnion(n);
         Map<String, Integer> valuePositionToLineIndex = new HashMap<>();
+        StringBuilder keyBuilder = new StringBuilder();
 
         for (int i = 0; i < n; i++) {
             List<String> lineParts = uniqueLines.get(i);
             for (int j = 0; j < lineParts.size(); j++) {
                 String value = lineParts.get(j);
                 if (value != null && !value.isEmpty()) {
-                    String key = j + ":" + value;
+                    keyBuilder.setLength(0);
+                    String key = keyBuilder.append(j).append(":").append(value).toString();
                     if (valuePositionToLineIndex.containsKey(key)) {
                         dsu.union(i, valuePositionToLineIndex.get(key));
                     } else {
